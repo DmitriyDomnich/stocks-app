@@ -29,20 +29,22 @@ const SelectedGroup = ({ group }: Props) => {
 
   return (
     <div>
-      <div className='flex justify-end pr-5'>
-        <GroupSortSelect />
-      </div>
       {sortedTickers.length ? (
-        <table className='w-full'>
-          <TickerHeaders />
-          <tbody className='text-center'>
-            {tickers?.map((ticker) => (
-              <TickerBar key={ticker.ticker} ticker={ticker}>
-                <RemoveTicker ticker={ticker} group={group} />
-              </TickerBar>
-            ))}
-          </tbody>
-        </table>
+        <>
+          <div className='flex justify-end pr-5'>
+            <GroupSortSelect />
+          </div>
+          <table className='w-full'>
+            <TickerHeaders />
+            <tbody className='text-center'>
+              {tickers?.map((ticker) => (
+                <TickerBar key={ticker.ticker} ticker={ticker}>
+                  <RemoveTicker ticker={ticker} group={group} />
+                </TickerBar>
+              ))}
+            </tbody>
+          </table>
+        </>
       ) : (
         <div className='my-3 text-3xl text-center'>
           Tickers added to this group will show here

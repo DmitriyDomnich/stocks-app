@@ -8,3 +8,6 @@ export const selectChartTickerData = ({ charts }: RootState) => {
     loading,
   };
 };
+export const selectChartTickerField = ({ charts }: RootState) => charts.field;
+export const selectChartTickerInterval = ({ charts }: RootState) =>
+  charts.interval;

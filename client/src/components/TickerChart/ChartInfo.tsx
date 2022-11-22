@@ -3,17 +3,23 @@ import Badge from 'components/Badge';
 import { ChartTickerModel } from 'models/tickers/TickerModel';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { useAppSelector } from 'rdx/hooks';
+import { selectChartTickerInterval } from 'rdx/charts/selectors';
+import { TickerInterval } from 'services/tickersService';
 
 type Props = {
   tickerData: ChartTickerModel[];
-  interval: 'yday';
 };
 
-const intervalMap = {
+const intervalMap: Record<TickerInterval, string> = {
   yday: 'Yesterday',
+  '1M': '1 month',
+  '5D': '5 days',
+  '6M': '6 month',
 };
 
-const ChartInfo = ({ tickerData, interval }: Props) => {
+const ChartInfo = ({ tickerData }: Props) => {
+  const interval = useAppSelector(selectChartTickerInterval);
   const initPrice = useMemo(() => tickerData[0].price, [tickerData]);
   const lastPrice = useMemo(
     () => tickerData[tickerData.length - 1].price,
@@ -24,7 +30,7 @@ const ChartInfo = ({ tickerData, interval }: Props) => {
     const isPositive = lastPrice > initPrice;
     return (
       <Badge
-        className={`!block ${
+        className={`mt-1 ${
           isPositive
             ? 'text-green-600 bg-green-600/50'
             : 'text-red-600 bg-red-600/50'

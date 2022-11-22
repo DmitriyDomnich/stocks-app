@@ -15,7 +15,10 @@ const RemoveTicker = ({ ticker, group }: Props) => {
   const dispatch = useAppDispatch();
 
   const handleRemove = useCallback(
-    () => dispatch(toggleGroupTicker({ group, ticker: ticker.ticker })),
+    (ev: React.MouseEvent) => {
+      ev.stopPropagation();
+      dispatch(toggleGroupTicker({ group, ticker: ticker.ticker }));
+    },
     [dispatch, group, ticker.ticker]
   );
 

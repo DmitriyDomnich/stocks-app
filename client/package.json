@@ -20,6 +20,7 @@
     "react-charts": "^3.0.0-beta.50",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
+    "react-resizable": "^3.0.4",
     "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
     "redux": "^4.2.0",
@@ -56,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-resizable": "^3.0.3",
     "@types/redux-persist": "^4.3.1",
     "@types/uuid": "^8.3.4",
     "autoprefixer": "^10.4.13",

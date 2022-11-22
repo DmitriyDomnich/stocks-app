@@ -4,31 +4,35 @@ import { ChartTickerModel } from 'models/tickers/TickerModel';
 
 export type TickerInterval = 'yday' | '5D' | '1M' | '6M';
 
-export interface APIResponse<T extends object> {
+interface APIResponse<T extends object> {
   success: boolean;
   error?: string;
-  response?: T;
+  data?: T;
 }
+type APIRequest = {
+  path: string;
+  params?: URLSearchParams | Record<string, string>;
+  method?: 'get' | 'post';
+};
 const BASE_API_URL = 'http://localhost:4000';
 
-export const getTickerDataByInterval = async (
-  tickerName: Tickers,
-  interval: TickerInterval
-): Promise<APIResponse<ChartTickerModel[]>> => {
+const performRequest = async <T extends object>({
+  path,
+  params,
+  method = 'get',
+}: APIRequest): Promise<APIResponse<T>> => {
   try {
-    const response = await axios.get<ChartTickerModel[]>(
-      `${BASE_API_URL}/ticker`,
-      {
-        params: {
-          ticker: tickerName,
-          interval,
-        },
-      }
-    );
+    const response = await axios.request<T>({
+      baseURL: BASE_API_URL,
+      url: path,
+      method,
+      params,
+    });
+
     if (response.status === 200 && response.data) {
       return {
         success: true,
-        response: response.data,
+        data: response.data,
       };
     }
     return {
@@ -41,4 +45,30 @@ export const getTickerDataByInterval = async (
       error: err.toString(),
     };
   }
+};
+
+export const getTickersByTickerNames = async (
+  observedTicker: Tickers
+): Promise<APIResponse<ChartTickerModel[]>> => {
+  const response = await performRequest<ChartTickerModel[]>({
+    path: '/tickers',
+    params: {
+      ticker: observedTicker,
+    },
+  });
+  return response;
+};
+
+export const getTickerDataByInterval = async (
+  tickerName: Tickers,
+  interval: TickerInterval
+): Promise<APIResponse<ChartTickerModel[]>> => {
+  const response = await performRequest<ChartTickerModel[]>({
+    params: {
+      ticker: tickerName,
+      interval,
+    },
+    path: '/ticker',
+  });
+  return response;
 };

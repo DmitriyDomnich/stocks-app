@@ -6,6 +6,7 @@ import { setTickers } from 'rdx/tickers/actions';
 import WatchingGroupModels from 'components/WatchingGroups';
 import { TickerModel } from 'models/tickers/TickerModel';
 import { SocketContext } from 'App';
+import { clearCharts } from 'rdx/charts/actions';
 
 const HomePage = () => {
   const tickers = useAppSelector(selectAllTickers);
@@ -13,19 +14,12 @@ const HomePage = () => {
   const socket = useContext(SocketContext);
 
   useEffect(() => {
-    // socket.on('connect', () => {
-    //   console.log('connect');
-    // });
-    // socket.on('disconnect', () => {
-    //   console.log('disconnect');
-    // });
+    dispatch(clearCharts());
     socket.connect();
     socket.on('ticker', (data: TickerModel[]) => dispatch(setTickers(data)));
     socket.emit('start');
 
     return () => {
-      console.log('unsubscribe');
-
       socket.disconnect();
     };
   }, [dispatch, socket]);

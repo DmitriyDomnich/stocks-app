@@ -57,14 +57,14 @@ const TickerBar = ({ ticker, children }: Props) => {
     );
   }, [changePrice, isPositive]);
 
-  const goToDiagram = useCallback(
-    () => navigate(`/diagram/${ticker.ticker}`),
+  const goToChart = useCallback(
+    () => navigate(`/chart/${ticker.ticker}`),
     [navigate, ticker.ticker]
   );
 
   return (
     <tr
-      onClick={goToDiagram}
+      onClick={goToChart}
       className='first:border-none last:border-none cursor-pointer bg-slate-200 hover:bg-slate-300 border-y border-slate-300'
     >
       <td className='text-start'>

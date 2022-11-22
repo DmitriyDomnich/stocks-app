@@ -26,10 +26,10 @@ const GroupBar = ({ group, selected }: Props) => {
 
   const [open, setOpen] = useState(false);
 
-  const goToGroup = useCallback(() => {
-    console.log('called');
-    navigate(selected ? '/' : `/?group=${group.id}`);
-  }, [navigate, selected, group.id]);
+  const goToGroup = useCallback(
+    () => navigate(selected ? '/' : `/?group=${group.id}`),
+    [navigate, selected, group.id]
+  );
   const handleRemoveGroup = useCallback(
     () => dispatch(removeGroup(group.id)),
     [dispatch, group.id]

@@ -19,12 +19,19 @@ const GroupOptions = ({ ticker, group }: Props) => {
   );
 
   const handleChange = useCallback(
-    () => dispatch(toggleGroupTicker({ group, ticker: ticker.ticker })),
+    (ev: React.ChangeEvent<HTMLInputElement>) => {
+      ev.stopPropagation();
+      dispatch(toggleGroupTicker({ group, ticker: ticker.ticker }));
+    },
     [dispatch, group, ticker]
   );
 
   return (
-    <MenuItem disableRipple key={group.id}>
+    <MenuItem
+      onClick={(ev) => ev.stopPropagation()}
+      disableRipple
+      key={group.id}
+    >
       <Checkbox onChange={handleChange} checked={isChecked} />
       {group.title}
     </MenuItem>

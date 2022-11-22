@@ -14,7 +14,7 @@ function App() {
         <div className='container mx-auto p-3 flex flex-col space-y-2 pt-20'>
           <Routes>
             <Route element={<HomePage />} path='/' index />
-            <Route element={<ChartsPage />} path='/diagram/:ticker' />
+            <Route element={<ChartsPage />} path='/chart/:ticker' />
           </Routes>
         </div>
       </div>

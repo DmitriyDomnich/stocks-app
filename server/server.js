@@ -35,6 +35,57 @@ const intervals = {
       .valueOf(),
     step: 300000,
   },
+  '5D': {
+    min: moment()
+      .local()
+      .subtract(5, 'day')
+      .set('hour', 9)
+      .set('minute', 30)
+      .set('second', 0)
+      .valueOf(),
+    max: moment()
+      .local()
+      .subtract(1, 'day')
+      .set('hour', 16)
+      .set('minute', 0)
+      .set('second', 0)
+      .valueOf(),
+    step: 1.08e7,
+  },
+  '1M': {
+    min: moment()
+      .local()
+      .subtract(30, 'day')
+      .set('hour', 9)
+      .set('minute', 30)
+      .set('second', 0)
+      .valueOf(),
+    max: moment()
+      .local()
+      .subtract(1, 'day')
+      .set('hour', 16)
+      .set('minute', 0)
+      .set('second', 0)
+      .valueOf(),
+    step: 8.64e7,
+  },
+  '6M': {
+    min: moment()
+      .local()
+      .subtract(180, 'day')
+      .set('hour', 9)
+      .set('minute', 30)
+      .set('second', 0)
+      .valueOf(),
+    max: moment()
+      .local()
+      .subtract(1, 'day')
+      .set('hour', 16)
+      .set('minute', 0)
+      .set('second', 0)
+      .valueOf(),
+    step: 2.592e8,
+  },
 };
 
 function randomValue(min = 0, max = 1, precision = 0) {
@@ -121,6 +172,23 @@ app.get('/ticker', function (req, res) {
       res.status(401).send('Wrong params');
     }
   } catch (error) {
+    res.status(401).send('Something went wrong');
+  }
+});
+app.get('/tickers', function (req, res) {
+  try {
+    const { ticker } = req.query;
+    if (ticker) {
+      const tickersToSend = tickers.filter(
+        (currTicker) => currTicker !== ticker
+      );
+      res
+        .status(200)
+        .json(tickersToSend.map((ticker) => getQuote(ticker, Date.now())));
+    } else {
+      res.status(401).send('Wrong params');
+    }
+  } catch (err) {
     res.status(401).send('Something went wrong');
   }
 });

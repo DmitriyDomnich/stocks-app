@@ -2,13 +2,15 @@ import React, { useMemo } from 'react';
 import { ChartTickerModel } from 'models/tickers/TickerModel';
 import { ChartSeries } from 'rdx/charts/reducer';
 import { AxisOptions, Chart } from 'react-charts';
+import { useAppSelector } from 'rdx/hooks';
+import { selectChartTickerField } from 'rdx/charts/selectors';
 
 type Props = {
   data: ChartSeries[];
 };
 
 const TickerChart = ({ data }: Props) => {
-  console.log(data, 'data');
+  const field = useAppSelector(selectChartTickerField);
 
   const primaryAxis = useMemo<AxisOptions<ChartTickerModel>>(
     () => ({
@@ -24,10 +26,10 @@ const TickerChart = ({ data }: Props) => {
   const secondaryAxes = useMemo<AxisOptions<ChartTickerModel>[]>(
     () => [
       {
-        getValue: (datum) => datum.price,
+        getValue: (datum) => datum[field],
       },
     ],
-    []
+    [field]
   );
 
   return (
