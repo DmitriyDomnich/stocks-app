@@ -4,6 +4,7 @@ import { ChartSeries } from 'rdx/charts/reducer';
 import { AxisOptions, Chart } from 'react-charts';
 import { useAppSelector } from 'rdx/hooks';
 import { selectChartTickerField } from 'rdx/charts/selectors';
+import ChartTooltip from './ChartTooltip';
 
 type Props = {
   data: ChartSeries[];
@@ -39,6 +40,14 @@ const TickerChart = ({ data }: Props) => {
           primaryAxis,
           secondaryAxes,
           data,
+          tooltip: {
+            render: ({ anchor, focusedDatum }) => (
+              <ChartTooltip
+                interactiveGroup={focusedDatum?.interactiveGroup}
+                anchor={{ ...anchor }}
+              />
+            ),
+          },
         }}
       />
     </div>
