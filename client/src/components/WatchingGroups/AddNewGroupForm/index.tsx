@@ -9,39 +9,26 @@ import {
   TextField,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { v4 as createId } from 'uuid';
-import { setGroups } from '../../rdx/groups/actions';
-import { useAppDispatch } from 'rdx/hooks';
-import { WatchingGroupModel } from 'models/groups/WatchingGroupModel';
 
 type Props = {
-  groups: WatchingGroupModel[];
+  onSubmit?: (groupName: string) => void;
 };
 
-const AddNewGroupForm = ({ groups }: Props) => {
+const AddNewGroupForm = ({ onSubmit }: Props) => {
   const [showDialog, setShowDialog] = useState(false);
   const [groupName, setGroupName] = useState('');
 
-  const dispatch = useAppDispatch();
-
-  const addGroup = useCallback(
+  const handleSubmit = useCallback(
     (ev: React.FormEvent) => {
       ev.preventDefault();
       if (groupName) {
-        dispatch(
-          setGroups(
-            groups.concat({
-              id: createId(),
-              title: groupName,
-              tickers: [],
-            })
-          )
-        );
+        onSubmit && onSubmit(groupName);
+
         setGroupName('');
         setShowDialog(false);
       }
     },
-    [dispatch, groups, groupName]
+    [groupName, onSubmit]
   );
 
   const handleTextChange = useCallback(
@@ -54,7 +41,7 @@ const AddNewGroupForm = ({ groups }: Props) => {
   return (
     <>
       <Dialog open={showDialog} onClose={handleClose}>
-        <form onSubmit={addGroup}>
+        <form onSubmit={handleSubmit}>
           <DialogTitle>Subscribe</DialogTitle>
           <DialogContent>
             <DialogContentText>
@@ -69,6 +56,7 @@ const AddNewGroupForm = ({ groups }: Props) => {
               type='text'
               fullWidth
               variant='standard'
+              inputProps={{ 'aria-label': 'group' }}
             />
           </DialogContent>
           <DialogActions>
@@ -77,7 +65,11 @@ const AddNewGroupForm = ({ groups }: Props) => {
           </DialogActions>
         </form>
       </Dialog>
-      <Button className='!mt-2 !ml-2' onClick={handleOpen}>
+      <Button
+        data-testid='show-dialog-button'
+        className='!mt-2 !ml-2'
+        onClick={handleOpen}
+      >
         <AddIcon className='mr-2' /> Create group
       </Button>
     </>

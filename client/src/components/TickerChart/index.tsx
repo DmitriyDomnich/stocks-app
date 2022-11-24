@@ -46,12 +46,13 @@ const TickerChart = ({ data }: Props) => {
           secondaryAxes,
           data,
           tooltip: {
-            render: ({ anchor, focusedDatum }) => (
-              <ChartTooltip
-                interactiveGroup={focusedDatum?.interactiveGroup}
-                anchor={{ ...anchor }}
-              />
-            ),
+            render: ({ anchor, focusedDatum }) =>
+              anchor.style.left && anchor.style.top ? (
+                <ChartTooltip
+                  interactiveGroup={focusedDatum?.interactiveGroup}
+                  anchor={{ ...anchor }}
+                />
+              ) : null,
           },
         }}
       />

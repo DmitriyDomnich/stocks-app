@@ -1,13 +1,14 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { WatchingGroupModel } from 'models/groups/WatchingGroupModel';
 import { useAppSelector } from 'rdx/hooks';
 import { selectTickersByTickerNames } from 'rdx/tickers/selectors';
 import TickerBar from 'components/TickerBar';
 import RemoveTicker from 'components/TickerBar/TickerOptions/RemoveTicker';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import TickerHeaders from 'components/TickerBar/TickerHeaders';
 import GroupSortSelect, { SortFieldsType } from './GroupSortSelect';
 import { getSortFunction } from 'utils/tickers';
+import { Tickers } from 'models/tickers/Tickers';
 
 type Props = {
   group: WatchingGroupModel;
@@ -16,6 +17,7 @@ type Props = {
 const SelectedGroup = ({ group }: Props) => {
   const tickers = useAppSelector(selectTickersByTickerNames(group.tickers));
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const sortedTickers = useMemo(() => {
     const sortField = searchParams.get('sortField') as SortFieldsType;
@@ -26,6 +28,11 @@ const SelectedGroup = ({ group }: Props) => {
     }
     return tickers.sort(getSortFunction(sortField, sortOrder));
   }, [searchParams, tickers]);
+
+  const goToChart = useCallback(
+    (ticker: Tickers) => navigate(`/chart/${ticker}`),
+    [navigate]
+  );
 
   return (
     <div>
@@ -38,7 +45,11 @@ const SelectedGroup = ({ group }: Props) => {
             <TickerHeaders />
             <tbody className='text-center'>
               {tickers?.map((ticker) => (
-                <TickerBar key={ticker.ticker} ticker={ticker}>
+                <TickerBar
+                  onClick={goToChart}
+                  key={ticker.ticker}
+                  ticker={ticker}
+                >
                   <RemoveTicker ticker={ticker} group={group} />
                 </TickerBar>
               ))}

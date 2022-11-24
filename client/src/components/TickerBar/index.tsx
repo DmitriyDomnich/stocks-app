@@ -4,18 +4,18 @@ import { tickerToTickerName } from '../../utils/tickers';
 import Badge from '../Badge';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { useNavigate } from 'react-router-dom';
 import { tickerColorsMap } from 'utils/colors';
+import { Tickers } from 'models/tickers/Tickers';
 
 type Props = {
   ticker: TickerModel;
+  onClick?: (ticker: Tickers) => void;
   children?: React.ReactNode;
 };
 const marketPrice = 200;
 
-const TickerBar = ({ ticker, children }: Props) => {
+const TickerBar = ({ ticker, children, onClick }: Props) => {
   const tickerName = useMemo(() => tickerToTickerName(ticker.ticker), [ticker]);
-  const navigate = useNavigate();
   const backgroundColor = useMemo(
     () => tickerColorsMap.getColor(ticker.ticker),
     [ticker.ticker]
@@ -42,6 +42,7 @@ const TickerBar = ({ ticker, children }: Props) => {
     const percent = Math.abs((changePrice * 100) / marketPrice).toFixed(2);
     return (
       <Badge
+        id='tickerBar'
         className={`!block ${
           isPositive
             ? 'text-green-600 bg-green-600/50'
@@ -58,14 +59,13 @@ const TickerBar = ({ ticker, children }: Props) => {
     );
   }, [changePrice, isPositive]);
 
-  const goToChart = useCallback(
-    () => navigate(`/chart/${ticker.ticker}`),
-    [navigate, ticker.ticker]
-  );
+  const handleClick = useCallback(() => {
+    onClick && onClick(ticker.ticker);
+  }, [onClick, ticker.ticker]);
 
   return (
     <tr
-      onClick={goToChart}
+      onClick={handleClick}
       className='first:border-none last:border-none cursor-pointer bg-slate-200 hover:bg-slate-300 border-y border-slate-300'
     >
       <td className='text-start'>

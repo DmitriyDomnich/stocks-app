@@ -5,6 +5,9 @@ import GroupOptions from 'components/TickerBar/TickerOptions/GroupOptions';
 import { TickerModel } from 'models/tickers/TickerModel';
 import { WatchingGroupModel } from 'models/groups/WatchingGroupModel';
 import AddNewGroupForm from 'components/WatchingGroups/AddNewGroupForm';
+import { useAppDispatch } from 'rdx/hooks';
+import { setGroups } from 'rdx/groups/actions';
+import { v4 as createId } from 'uuid';
 
 type Props = {
   ticker: TickerModel;
@@ -14,6 +17,7 @@ type Props = {
 const AddTicker = ({ ticker, groups }: Props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const isMenuOpen = useMemo(() => !!anchorEl, [anchorEl]);
+  const dispatch = useAppDispatch();
 
   const handleOpenMenu = useCallback(
     (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -23,11 +27,25 @@ const AddTicker = ({ ticker, groups }: Props) => {
     [setAnchorEl]
   );
   const handleMenuClose = useCallback(
-    (ev: any) => {
+    (ev: {} & Event) => {
       ev.stopPropagation();
       setAnchorEl(null);
     },
     [setAnchorEl]
+  );
+  const addGroup = useCallback(
+    (groupName: string) => {
+      dispatch(
+        setGroups(
+          groups.concat({
+            id: createId(),
+            title: groupName,
+            tickers: [],
+          })
+        )
+      );
+    },
+    [dispatch, groups]
   );
 
   return (
@@ -43,7 +61,7 @@ const AddTicker = ({ ticker, groups }: Props) => {
             <GroupOptions group={group} ticker={ticker} key={group.id} />
           ))
         ) : (
-          <AddNewGroupForm groups={groups} />
+          <AddNewGroupForm onSubmit={addGroup} />
         )}
       </Menu>
     </>

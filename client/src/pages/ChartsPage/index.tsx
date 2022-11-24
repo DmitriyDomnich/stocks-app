@@ -68,7 +68,7 @@ const ChartsPage = () => {
           <ChartComparisons />
         </>
       ) : (
-        <div>{error}</div>
+        <div data-testid='error-message'>{error}</div>
       )}
     </div>
   );

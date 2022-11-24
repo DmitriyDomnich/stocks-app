@@ -1,8 +1,8 @@
 import React, { createContext } from 'react';
 import { io } from 'socket.io-client';
 import { Route, Routes } from 'react-router-dom';
-import HomePage from 'pages/HomePage';
 import ChartsPage from 'pages/ChartsPage';
+import HomePage from 'pages/HomePage';
 
 const socket = io('http://localhost:4000');
 export const SocketContext = createContext(socket);
