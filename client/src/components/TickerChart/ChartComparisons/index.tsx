@@ -44,7 +44,7 @@ const ChartComparisons = () => {
   );
 
   return (
-    <div>
+    <div className='my-5'>
       <div className='pl-2 text-3xl'>Compare to</div>
       {!error ? (
         <>

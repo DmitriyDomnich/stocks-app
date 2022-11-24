@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Breadcrumbs } from '@mui/material';
+import { Breadcrumbs, CircularProgress } from '@mui/material';
 import { usePageTicker } from 'hooks/useChartTicker';
 import { Link } from 'react-router-dom';
 import TickerChart from 'components/TickerChart';
@@ -8,6 +8,7 @@ import { Tickers } from 'models/tickers/Tickers';
 import ChartInfo from 'components/TickerChart/ChartInfo';
 import ChartSettings from 'components/TickerChart/ChartSettings';
 import ChartComparisons from 'components/TickerChart/ChartComparisons';
+import { tickerColorsMap } from 'utils/colors';
 
 const ChartsPage = () => {
   const { data, loading, error, ticker } = usePageTicker();
@@ -23,28 +24,47 @@ const ChartsPage = () => {
   );
 
   return (
-    <div>
+    <div className='p-2 md:p-3'>
       <Breadcrumbs>
         <Link className='hover:underline' to='/'>
           Home
         </Link>
         <span className='font-medium'>{ticker}</span>
       </Breadcrumbs>
-      <h2 className='text-2xl font-medium my-2'>{tickerName}</h2>
+      <h2 className='text-2xl font-medium my-2'>
+        <span
+          style={{ borderBottomColor: tickerColorsMap[ticker as Tickers] }}
+          className='border-b-2'
+        >
+          {tickerName}
+        </span>
+      </h2>
       <hr />
       {!error ? (
         <>
-          {!loading && data?.length && selectedTickerData ? (
-            <div>
+          <div>
+            {selectedTickerData && (
               <ChartInfo tickerData={selectedTickerData} />
-              <div className='flex flex-wrap space-x-4'>
-                <TickerChart data={data} />
-                <div className='flex flex-col space-y-2 flex-grow'>
-                  <ChartSettings />
-                </div>
-              </div>
-            </div>
-          ) : null}
+            )}
+            {!loading && data ? (
+              <>
+                {data?.length ? (
+                  <div>
+                    <div className='flex flex-wrap space-x-4'>
+                      <TickerChart data={data} />
+                      <div className='flex flex-col space-y-2 flex-grow'>
+                        <ChartSettings />
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div>Something went wrong</div>
+                )}
+              </>
+            ) : (
+              <CircularProgress className='my-5' />
+            )}
+          </div>
           <ChartComparisons />
         </>
       ) : (

@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { IconButton } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Tickers } from 'models/tickers/Tickers';
+import { tickerColorsMap } from 'utils/colors';
 
 type Props = {
   ticker: ChartTickerModel;
@@ -14,6 +15,10 @@ type Props = {
 const TickerCard = ({ ticker, onClick, onRemove }: Props) => {
   const handleClick = useCallback(() => onClick(ticker), [onClick, ticker]);
   const [searchParams] = useSearchParams();
+  const selectedColor = useMemo(
+    () => tickerColorsMap.getColor(ticker.ticker),
+    [ticker.ticker]
+  );
 
   const isSelected = useMemo(
     () =>
@@ -34,18 +39,24 @@ const TickerCard = ({ ticker, onClick, onRemove }: Props) => {
   return (
     <div
       onClick={handleClick}
-      className={`${
-        isSelected ? 'border-b-4 border-b-purple-700' : ''
-      } group hover:shadow-lg first:mt-2 first:ml-2 cursor-pointer basis-44 rounded-md border border-neutral-300 p-2 flex flex-col space-y-1`}
+      style={{
+        borderBottomColor: isSelected ? selectedColor : '',
+        borderBottomWidth: isSelected ? '4px' : '',
+      }}
+      className='group hover:shadow-lg first:mt-2 first:ml-2 cursor-pointer basis-44 rounded-md border border-neutral-300 p-2 flex flex-col space-y-1'
     >
       <div className='flex justify-between'>
         <div className='text-sm'>{ticker.ticker}</div>
-        <IconButton
-          onClick={handleRemoveClick}
-          className='group-hover:visible invisible'
-        >
-          <ClearIcon />
-        </IconButton>
+        {isSelected ? (
+          <IconButton
+            onClick={handleRemoveClick}
+            className='group-hover:visible invisible'
+          >
+            <ClearIcon />
+          </IconButton>
+        ) : (
+          <div className='h-10'></div>
+        )}
       </div>
       <div className='text-lg font-medium'>{ticker.price} $</div>
     </div>

@@ -1,13 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
 import { TickerModel } from '../../models/tickers/TickerModel';
-import {
-  generateRandomLightColor,
-  tickerToTickerName,
-} from '../../utils/tickers';
+import { tickerToTickerName } from '../../utils/tickers';
 import Badge from '../Badge';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { useNavigate } from 'react-router-dom';
+import { tickerColorsMap } from 'utils/colors';
 
 type Props = {
   ticker: TickerModel;
@@ -18,7 +16,10 @@ const marketPrice = 200;
 const TickerBar = ({ ticker, children }: Props) => {
   const tickerName = useMemo(() => tickerToTickerName(ticker.ticker), [ticker]);
   const navigate = useNavigate();
-  const backgroundColor = useMemo(() => generateRandomLightColor(), []);
+  const backgroundColor = useMemo(
+    () => tickerColorsMap.getColor(ticker.ticker),
+    [ticker.ticker]
+  );
 
   const changePrice = useMemo(() => {
     const changePrice = +(ticker.price - marketPrice).toFixed(2);
